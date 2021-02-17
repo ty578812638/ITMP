@@ -1,0 +1,508 @@
+{% extends "layout.html" %}
+
+{% block content-one %}
+
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main">
+
+
+    <ol class="breadcrumb">
+        <li><a href="#">系统设置</a></li>
+        <li class="active">系统管理</li>
+    </ol>
+
+
+    <form class="user-info-form form-inline" id="handel_query_sys">
+
+        <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon1">系统编号</span>
+            <input type="text" class="form-control" placeholder="系统编号" aria-describedby="sizing-addon1"
+                   id="sys_no_inp">
+        </div>
+
+
+        <div class="input-group" style="margin-left: 40px;margin-right: 40px">
+            <span class="input-group-addon" id="sizing-addon2">系统名称</span>
+            <input type="text" class="form-control" placeholder="系统名称" aria-describedby="sizing-addon2"
+                   id="sys_name_inp">
+        </div>
+
+
+        <button type="button" class="btn btn-default" id="search">查询</button>
+        <button type="reset" class="btn btn-default">重置</button>
+
+
+    </form>
+
+    {% endblock %}
+
+
+    {% block content-two %}
+
+
+    <div class="user-info-btn-wrapper" id="handel_sys">
+
+
+        <!--创建系统莫泰对话框     data-target属性值 与莫泰对话的id属性值进行关联-->
+        <button type="button" class="btn btn-success" id="create_role_btn" data-toggle="modal"
+                data-target="#create_sys" onclick="clearSys()">创建系统
+        </button>
+
+        <div class="modal fade" id="create_sys" tabindex="-1" sys="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close"-->
+                        <!--data-dismiss="modal" aria-hidden="true">-->
+                        <!--×-->
+                        <!--</button>-->
+                        <h4 class="modal-title" id="createRoleModalLabel">
+                            创建系统
+                        </h4>
+                    </div>
+
+                    <!--模态框内容-->
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="sizing_role_no"
+                                  style="margin-top: 10px;margin-bottom: 10px">系统编号</span>
+                            <input type="text" class="form-control" placeholder="系统编号" aria-describedby="sizing_role_no"
+                                   required id="sys_no">
+                        </div>
+
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_role_name" style="margin: 100px">系统名称</span>
+                            <input type="text" class="form-control" placeholder="系统名称"
+                                   aria-describedby="sizing_role_name" required id="sys_name">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="cancel_create_sys"
+                                data-dismiss="modal">取消
+                        </button>
+                        <button type="button" class="btn btn-primary" id="confirm_create_sys">
+                            确认
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!--创建系统莫泰对话框-->
+
+
+        <!--编辑系统莫泰对话框-->
+        <button type="button" class="btn btn-primary " id="edit_sys_btn" data-toggle="modal">编辑系统</button>
+
+        <div class="modal fade " tabindex="-1" sys="dialog" id="edit_sys" name="edit_sys"
+             aria-labelledby="myModalLabel" aria-hidden="true" onclick="clearSys()">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title" id="editSysModalLabel">
+                            编辑系统
+                        </h4>
+                    </div>
+
+                    <!--模态框内容-->
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="edit_sys_no"
+                                  style="margin-top: 10px;margin-bottom: 10px">系统编号</span>
+                            <input type="text" class="form-control" placeholder="系统编号" aria-describedby="edit_sys_no"
+                                   id="editSysNo" disabled="disabled">
+                        </div>
+
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="edit_role_name" style="margin: 100px">系统名称</span>
+                            <input type="text" class="form-control" placeholder="系统名称" aria-describedby="edit_sys_name"
+                                   id="editSysName">
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="cancel_edit_sys_btn"
+                                data-dismiss="modal">取消
+                        </button>
+                        <button type="button" class="btn btn-primary" id="confirm_edit_sys_btn">
+                            确认
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!--编辑角色莫泰对话框-->
+
+
+        <button type="button" class="btn btn-danger " id="delete_sys_btn" data-toggle="modal" >删除系统</button>
+
+         <!--关联删除系统确认提示的莫泰对话框   与删除系统中confirm_message动态id进行关联   -->
+        <div class="modal fade" id="confirm_message" tabindex="-1" sys="dialog"
+             aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label">是否确认删除？</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer" id="confirm_cancel">
+                        <button type="button" class="btn btn-default" id="cancel" data-dismiss="modal" id="cancel">取消
+                        </button>
+
+                        <button type="button" class="btn btn-primary" data-confirm="confirm" id="confirm">确认</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+    </div>
+
+
+    <div id="home" style="margin-top: 40px">
+        <h3>系统列表</h3>
+        <table class="table table-bordered">
+            <thead>
+            <tr class="info">
+
+                <td class="active">
+                    <input type="checkbox" style="margin: 0 8px 0 0; width: 16px;height: 16px" value="Car" name="check"
+                           onclick="selectAll(this.checked)">
+                </td>
+                <td>序号</td>
+                <td> 系统编号</td>
+                <td>系统名称</td>
+                <td>创建人</td>
+                <td>创建时间</td>
+            </tr>
+            </thead>
+
+            <tbody id="num">
+            {%for item in data_list %}
+            <tr class="active" data-sysNo={{item.sys_no}}>
+                <td class="active">
+                    <input type="checkbox" style="margin: 0 8px 0 0; width: 16px;height: 16px" value="Car" name="check">
+                </td>
+                <td></td>
+                <td sysNo={{item.sys_no}} class="sysNo">{{item.sys_no}}</td>
+                <td>{{item.sys_name}}</td>
+                <td>{{item.creator}}</td>
+                <td>{{item.create_time}}</td>
+            </tr>
+            {%endfor%}
+
+            </tbody>
+        </table>
+
+        <nav aria-label="Page navigation">
+
+            <ul class="pagination" id="pager_pending">
+
+                <!--如果当前页有上一页当前页的上一页按钮正常使用-->
+                {% if previous_next_page.has_previous %}
+
+                <li class="previous"><a href="{{path}}?page={{ previous_next_page.previous_page_number }}">上一页</a></li>
+
+                <!--{当前页的不存在上一页时,上一页的按钮不可用-->
+                {% else %}
+                <li class="previous disabled"><a href="#">上一页</a></li>
+
+                <!--上一页按钮结束页码开始-->
+                {% endif %}
+                {% for num in pending_pager.page_range %}
+                {% if num == currentPage %}
+                <li class="item active"><a href="{{path}}?page={{ num }}">{{ num }}</a></li>
+
+                {% else %}
+                <li class="item"><a href="{{path}}?page={{ num }}">{{ num }}</a></li>
+
+                {% endif %}
+
+                {% endfor %}
+
+                <!--下一页按钮开始-->
+                {% if previous_next_page.has_next %}
+                <li class="next"><a href="{{path}}?page={{ previous_next_page.next_page_number }}">下一页</a></li>
+
+                {% else %}
+                <li class="next disabled"><a href="#">下一页</a></li>
+
+                {% endif %}
+                <!--下一页按钮结束-->
+            </ul>
+        </nav>
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script>
+    $(function () {
+
+        // 查询系统
+        bindQuery();
+
+        //创建系统
+        bindCreateSys();
+
+         //删除系统
+        bindDeleteSys();
+
+        //删除系统确认提示框
+        bindConfirmDeleteSys();
+
+        //获取编辑系统数据
+        bindGetEditData();
+        //提交编辑
+        bindEditSys();
+
+    });
+
+    //查询系统
+    function bindQuery() {
+        $("#search").on("click", function () {
+
+            var sysNo = $("#sys_no_inp").val()
+            var sysName = $("#sys_name_inp").val()
+
+            var url = "/querySys?code=" + "search" + "&sys_no=" + sysNo + "&sys_name=" + sysName
+            window.location.href = url
+
+        })
+
+    }
+
+    //创建系统
+    function bindCreateSys() {
+
+        $("#confirm_create_sys").on("click", function () {
+
+            var sysNo = $("#sys_no").val()
+            var sysName = $("#sys_name").val()
+
+
+            if (sysNo == '') {
+                return toastr.error('系统编号不能为空')
+
+            }
+            if (sysName == '') {
+                return toastr.error('系统名称不能为空')
+
+            }
+
+
+            $.ajax({
+                url: "/createSys/",
+                type: 'post',
+                dataType: "json",
+                data: {
+                    sys_no: sysNo,
+                    sys_name: sysName,
+
+                },
+                success: function (result) {
+                    if (result.code == "200") {
+                      var button = document.getElementById("cancel_create_sys")
+                      button.click()
+                      toastr.success(result.msg)
+                      bindRefresh()
+
+                    } else {
+                        toastr.error(result.msg)
+
+                    }
+                    ;
+
+                }
+            })
+        })
+
+    }
+
+
+    //删除系统
+    function bindDeleteSys() {
+        $("#handel_sys").on("click", "#delete_sys_btn", function () {
+            var sysNoList = new Array()
+            $("#num").find('input').each(function () {
+                var checkStatus = $(this.checked)[0]
+                console.log(checkStatus)
+                if (checkStatus) {
+                    //选择所有已勾选的复选框
+                    sysNoList.push(this.parentNode.parentNode.dataset.sysno)
+                };
+            })
+            if (sysNoList.length > 0) {
+                //设置确认删除莫泰对话框动态属性值
+                $("#delete_sys_btn").attr("data-target", "#confirm_message")
+
+                $("#confirm").attr("data-sysNo", sysNoList)
+
+            } else {
+                toastr.error("选项不能为空")
+            };
+        })
+    }
+
+    //确认删除系统
+     function bindConfirmDeleteSys() {
+        $("#confirm").on("click", function () {
+            var confirm = $(this).attr("data-confirm")
+            if (confirm == "confirm") {
+                var sysNolist = $("#confirm").attr("data-sysNo")
+                $.ajax({
+                    url: "/deleteSys/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        sys_no_list: sysNolist
+                    },
+                    success: function (result) {
+                        if (result.code == "200") {
+                            var btn = document.getElementById("cancel")
+                            btn.click()
+                            toastr.success(result.msg)
+                            bindRefresh()
+                        } else {
+                            return toastr.error(result.msg)
+                        }
+                    }
+                })
+            }
+
+        })
+    }
+
+
+    //获取编辑系统数据
+    function bindGetEditData() {
+        $("#handel_sys").on("click", "#edit_sys_btn", function () {
+            var sysNoList = new Array()
+            $("#num").find('input').each(function () {
+                var checkStatus = $(this.checked)[0]
+                if (checkStatus) {
+                    sysNoList.push(this.parentNode.parentNode.dataset.sysno)
+                }
+            });
+
+            if (sysNoList.length > 1) {
+                $("#edit_sys_btn").removeAttr("data-target","#edit_sys")
+                return toastr.error("一次只能选择一个系统编号进行编辑")
+            }
+            if (sysNoList.length < 1) {
+                 $("#edit_sys_btn").removeAttr("data-target","#edit_sys")
+                  return toastr.error("选项不能为空")
+            }
+            console.log('ee:'+sysNoList)
+            $("#edit_sys_btn").attr("data-target","#edit_sys")
+            $.ajax({
+            url: "/editSys/",
+            type: "get",
+            dataType: "json",
+            data: {sys_no: sysNoList[0]},
+            success: function (result) {
+                $("#editSysNo").val(result.sys_info[0].sys_no)
+                $("#editSysName").val(result.sys_info[0].sys_name)
+
+                }
+            })
+
+        })
+    }
+
+
+    //提交编辑系统
+    function bindEditSys() {
+        $("#confirm_edit_sys_btn").on("click", function () {
+            var sysNo = $("#editSysNo").val()
+            var sysName = $("#editSysName").val()
+
+
+            if (sysNo == '') {
+                return toastr.error("系统编号不能为空")
+
+            }
+            if (sysName == '') {
+                return toastr.error("系统名称不能为空")
+
+            }
+
+
+            $.ajax({
+                url: "/editSys/",
+                type: 'post',
+                dataType: "json",
+                data: {
+                    sys_no: sysNo,
+                    sys_name: sysName,
+                },
+                success: function (result) {
+                    if (result.code == "200") {
+                        var button = document.getElementById("cancel_edit_sys_btn")
+                        button.click()
+                          $("#edit_sys_btn").removeAttr("data-target")
+                         toastr.success(result.msg)
+                        bindRefresh()
+
+                    } else {
+                        toastr.error(result.msg)
+                    };
+                }
+            })
+        })
+
+    }
+
+
+    //添加编辑前清除角色缓存数据
+    function clearSys() {
+         $("#role_no").val("")
+         $("#role_name").val("")
+
+
+            $("#editRoleName").val("")
+            $("#editRoleStatus").val("")
+            $("#edit_role_btn").removeAttr("data-target")
+
+    }
+
+    // 生成序号
+    window.onload = function () {
+        var webTable = document.getElementById("num");
+        for (var i = 0; i < webTable.rows.length; i++) {
+            webTable.rows[i].cells[1].innerHTML = (i + 1);
+        }
+    }
+
+    //  全选
+    function selectAll(selectStatus) {
+        if (selectStatus) {
+            $("input[name='check']").each(function () {
+                $(this).prop("checked", true)
+            });
+        } else {
+            $("input[name='check']").each(function () {
+                $(this).prop("checked", false)
+            });
+        }
+    }
+
+</script>
+{% endblock%}
+
+
+
+
+
+
+

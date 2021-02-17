@@ -1,0 +1,817 @@
+{% extends "layout.html" %}
+
+    <style>
+        .modal-body .input-group {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+
+{% block content-one %}
+
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main">
+
+    <!--面包屑-->
+    <ol class="breadcrumb">
+        <li><a href="#">系统设置</a></li>
+        <li class="active">用户管理</li>
+    </ol>
+
+
+    <form class="user-info-form form-inline" id="handel_query_user">
+
+
+        <div class="input-group" style="width: 250px">
+            <span class="input-group-addon" id="sizing-addon1">用户编号</span>
+            <input type="text" class="form-control" placeholder="用户编号" aria-describedby="sizing-addon1"
+                   id="user_no_inp">
+        </div>
+
+
+        <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon2">用户名称</span>
+            <input type="text" class="form-control" placeholder="用户名称" aria-describedby="sizing-addon2"
+                   id="user_name_inp">
+        </div>
+
+
+
+        <button type="button" class="btn btn-default" id="search">查询</button>
+        <button type="reset" class="btn btn-default">重置</button>
+
+
+    </form>
+
+    {% endblock %}
+
+
+    {% block content-two %}
+
+
+    <div class="user-info-btn-wrapper" id="handel_user">
+
+
+        <!--新增用户莫泰对话框-->
+        <button type="button" class="btn btn-success" id="create_user_btn" data-toggle="modal"
+                data-target="#create_user" onclick="clearUser()">添加用户
+        </button>
+
+        <div class="modal fade" id="create_user" tabindex="-1" role="dialog"
+             aria-labelledby="createUserModalLabel" aria-hidden="true" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="createUserModalLabel">
+                            新建用户
+                        </h4>
+                    </div>
+
+                    <!--模态框内容-->
+                    <div class="modal-body">
+
+                        <div class="input-group" style="margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_user_no"
+                                  style="margin-top: 10px;margin-bottom: 10px">用户编号</span>
+                            <input type="text" class="form-control" placeholder="用户编号" aria-describedby="sizing_user_no"
+                                   id="user_id">
+
+                        </div>
+
+
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_user_name"
+                                  style="margin-top: 10px;margin-bottom: 10px">用户姓名</span>
+                            <input type="text" class="form-control" placeholder="用户姓名"
+                                   aria-describedby="sizing_user_name" id="user_name">
+                        </div>
+
+
+                      <div class="input-group" style="margin-top: 10px;margin-bottom: 10px"  id="system">
+                            <span class="input-group-addon" id="sizing-sys">所属系统</span>
+                            <select class="form-control selectpicker" aria-describedby="sizing-addon"
+                                    multiple="multiple" title="请选择系统" id="sys_list"
+                                    style="width: 100%">
+
+                            </select>
+                        </div>
+
+
+
+                        <div class="input-group">
+                            <span class="input-group-addon" id="sizing-addon">用户状态</span>
+                            <select class="form-control" aria-describedby="sizing-addon" id="user_status"
+                                    style="width: 100% ">
+                                <option value="有效" selected="selected">有效</option>
+                                <option value="无效">失效</option>
+
+                            </select>
+                        </div>
+
+
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_phone_no" style="margin: 100px">手机号码</span>
+                            <input type="text" class="form-control" placeholder="手机号码" aria-describedby="sizing_team_no"
+                                   required id="phone_no">
+                        </div>
+
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_email_no" style="margin: 100px">电子邮箱</span>
+                            <input type="text" class="form-control" placeholder="电子邮箱" aria-describedby="sizing_team_no"
+                                   required id="email_no">
+                        </div>
+
+                    </div>
+                    <!--模态框内容-->
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="cancel_create_user"
+                                data-dismiss="modal">取消
+                        </button>
+                        <button type="button" class="btn btn-primary" id="confirm_create_user">
+                            提交
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!--新增用户莫泰对话框-->
+
+
+        <!--编辑用户莫泰对话框-->
+        <button type="button" class="btn btn-primary " id="edit_user_btn" data-toggle="modal">编辑用户</button>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="edit_user" name="edit_user"
+             aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="editRoleModalLabel">
+                            编辑用户
+                        </h4>
+                    </div>
+
+                    <!--模态框内容-->
+                    <div class="modal-body">
+
+                        <div class="input-group" style="margin-bottom: 10px">
+                            <span class="input-group-addon" id="edit_user_no"
+                                  style="margin-top: 10px;margin-bottom: 10px">用户编号</span>
+                            <input type="text" class="form-control" placeholder="用户编号" aria-describedby="edit_user_no"
+                                   id="edit_user_id" disabled="disabled">
+
+                        </div>
+
+
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_user_name_1"
+                                  style="margin-top: 10px;margin-bottom: 10px">用户姓名</span>
+                            <input type="text" class="form-control" placeholder="用户姓名"
+                                   aria-describedby="sizing_user_name_1" id="edit_user_name">
+                        </div>
+
+
+                        <div class="input-group">
+                            <span class="input-group-addon" id="sizing_role_no_1"
+                                  style="margin-top: 10px;margin-bottom: 10px">角色编号</span>
+                            <input type="text" class="form-control" placeholder="角色编号"
+                                   aria-describedby="sizing_role_no_1" disabled="disabled" id="edit_role_no">
+                            <input type="text" class="hidden" placeholder="角色名称" id="edit_role_name">
+
+                            <div class="input-group-addon" id="edit_user_head">
+                                <button type="button" data-toggle="modal" data-target="#select_role" id="edit_get_role">
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                </button>
+                            </div>
+
+                        </div>
+
+
+                        <!--选择部门   -->
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_dept_no_1" style="margin: 100px">所属部门</span>
+                            <input type="text" class="form-control hidden" placeholder="部门编号"
+                                   aria-describedby="sizing_dept_no_1" id="edit_dept_no">
+                            <input type="text" class="form-control" placeholder="部门名称"
+                                   aria-describedby="sizing_dept_name" disabled="disabled" id="edit_dept_name">
+
+                            <div class="input-group-addon">
+                                <button type="button" data-toggle="modal" data-target="#select_dept_no"
+                                        id="edit_get_dept_no">
+                                    <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <!--选择团队   -->
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_team_no_1" style="margin: 100px">所属团队</span>
+                            <input type="text" class="form-control hidden" placeholder="团队编号"
+                                   aria-describedby="sizing_team_no_1" disabled="disabled" id="edit_team_no">
+                            <input type="text" class="form-control" placeholder="团队名称" aria-describedby="sizing_team_no"
+                                   disabled="disabled" id="edit_team_name">
+
+
+                            <div class="input-group-addon" id="edit_get_team_info">
+                                <button type="button" data-toggle="modal" data-target="#select_team_no"
+                                        id="edit_get_team_no">
+                                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="input-group">
+                            <span class="input-group-addon" id="sizing-addon6">用户状态</span>
+                            <select class="form-control" aria-describedby="sizing-addon6" id="edit_user_status"
+                                    style="width: 100%">
+                                <option value="0" selected="selected">有效</option>
+                                <option value="1">失效</option>
+
+                            </select>
+                        </div>
+
+
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_phone_no_1" style="margin: 100px">手机号码</span>
+                            <input type="text" class="form-control" placeholder="手机号码"
+                                   aria-describedby="sizing_phone_no_1" required id="edit_phone_no">
+
+                        </div>
+
+                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                            <span class="input-group-addon" id="sizing_email_no_1" style="margin: 100px">电子邮箱</span>
+                            <input type="text" class="form-control" placeholder="电子邮箱"
+                                   aria-describedby="sizing_email_no_1" required id="edit_email_no">
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="cancel_edit_user"
+                                data-dismiss="modal">取消
+                        </button>
+                        <button type="button" class="btn btn-primary" id="confirm_edit_user">
+                            确认
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!--编辑用户莫泰对话框-->
+
+
+        <button type="button" class="btn btn-danger " id="delete_user_btn" data-toggle="modal">删除用户</button>
+
+        <!--关联删除用户确认提示的莫泰对话框 -->
+        <div class="modal fade" id="confirm_message" tabindex="-1" role="dialog"
+             aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label">是否确认删除？</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer" id="confirm_cancel">
+                        <button type="button" class="btn btn-default" id="cancel" data-dismiss="modal" id="cancel">取消
+                        </button>
+
+                        <button type="button" class="btn btn-primary" data-confirm="confirm" id="confirm">确认</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+
+    </div>
+
+
+
+
+    <div id="home" style="margin-top: 40px">
+        <h3>用户列表</h3>
+        <table class="table table-bordered">
+            <thead>
+            <tr class="info">
+
+                <td class="active">
+                    <input type="checkbox" style="margin: 0 8px 0 0; width: 16px;height: 16px" value="Car" name="check"
+                           onclick="selectAll(this.checked)">
+                </td>
+                <td>序号</td>
+                <td> 用户编号</td>
+                <td>用户姓名</td>
+                <td>所属系统</td>
+                <td>用户状态</td>
+                <td>联系号码</td>
+                <td>电子邮箱</td>
+                <td>创建人</td>
+                <td>创建时间</td>
+            </tr>
+            </thead>
+
+            <tbody id="num">
+            {%for item in data_list %}
+            <tr class="active" data-userNo={{item.user_no}}>
+                <td class="active">
+                    <input type="checkbox" style="margin: 0 8px 0 0; width: 16px;height: 16px" value="Car" name="check">
+                </td>
+                <td></td>
+                <td userNo={{item.user_no}} class="userNo">{{item.user_no}}</td>
+                <td>{{item.user_name}}</td>
+                <td>{{item.sys_no}}</td>
+                <td>{{item.status}}</td>
+                <td>{{item.mobile}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.creator}}</td>
+                <td>{{item.create_time}}</td>
+            </tr>
+            {%endfor%}
+
+            </tbody>
+        </table>
+
+        <nav aria-label="Page navigation">
+
+            <ul class="pagination" id="pager_pending">
+
+                <!--如果当前页有上一页当前页的上一页按钮正常使用-->
+                {% if previous_next_page.has_previous %}
+
+                <li class="previous"><a href="{{path}}?page={{ previous_next_page.previous_page_number }}">上一页</a></li>
+
+                <!--{当前页的不存在上一页时,上一页的按钮不可用-->
+                {% else %}
+                <li class="previous disabled"><a href="#">上一页</a></li>
+
+                <!--上一页按钮结束页码开始-->
+                {% endif %}
+                {% for num in user_pager.page_range %}
+                {% if num == currentPage %}
+                <li class="item active"><a href="{{path}}?page={{ num }}">{{ num }}</a></li>
+
+                {% else %}
+                <li class="item"><a href="{{path}}?page={{ num }}">{{ num }}</a></li>
+
+                {% endif %}
+
+                {% endfor %}
+
+                <!--下一页按钮开始-->
+                {% if previous_next_page.has_next %}
+                <li class="next"><a href="{{path}}?page={{ previous_next_page.next_page_number }}">下一页</a></li>
+
+                {% else %}
+                <li class="next disabled"><a href="#">下一页</a></li>
+
+                {% endif %}
+                <!--下一页按钮结束-->
+            </ul>
+        </nav>
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script>
+    $(function () {
+        bindQuery();
+        bindCreateUser();
+
+        bindDeleteUser();
+        //删除确认框
+        bindConfirm()
+
+        bindGetEditUser();
+        bindEditUser();
+
+       bindGetSys()
+
+
+    });
+
+
+      //清除用户信息缓存
+    function clearUser() {
+        $(" #sys_list option").remove()
+
+        $("#user_id").val("")
+        $("#user_name").val("")
+
+        $("#userl_status").val("")
+        $("#phone_no").val("")
+        $("#email_no").val("")
+
+         //恢复用户默认状态(有效)
+        $("#user_status").val("0")
+
+
+    }
+
+    //查询
+    function bindQuery() {
+        $("#search").on("click", function () {
+
+            var userNo = $("#user_no_inp").val()
+            var userName = $("#user_name_inp").val()
+            var roleName = $("#user_role_inp").val()
+            var deptName = $("#user_dept_inp").val()
+
+            var url = "/queryUser?code=" + "search" + "&user_no=" + userNo + "&user_name=" + userName + "&role_name=" + roleName + "&dept_name=" + deptName
+            window.location.href = url
+
+
+        })
+
+    }
+
+    // 创建用户
+    function bindCreateUser() {
+
+        $("#confirm_create_user").on("click", function () {
+
+            var user_no = $("#user_id").val()
+            var user_name = $("#user_name").val()
+            var sys_no = $("#sys_list").val()
+            var user_status = $("#user_status").val()
+            var mobile = $("#phone_no").val()
+            var email = $("#email_no").val()
+
+
+            if (user_no == "") {
+                return toastr.error("用户编号不能为空")
+            }
+            if (user_name == "") {
+                return toastr.error("用户姓名不能为空")
+            }
+            if (sys_no == "") {
+                return toastr.error("所属系统不能为空")
+            }
+
+            $.ajax({
+                url: "/createUser/",
+                type: "post",
+                dataType: "json",
+                data: {
+                    user_no: user_no,
+                    user_name: user_name,
+                    sys_no: sys_no,
+                    status: user_status,
+                    mobile: mobile,
+                    email: email
+                },
+                success: function (result) {
+                    if (result.code == "400") {
+                        return toastr.error(result.msg)
+                    } else {
+                        var btn = document.getElementById("cancel_create_user")
+                        btn.click()
+                        toastr.success(result.msg)
+                        bindRefresh()
+                    }
+                    ;
+
+                }
+            });
+
+        })
+
+    }
+
+
+    //删除用户
+    function bindDeleteUser() {
+        $("#handel_user").on("click", "#delete_user_btn", function () {
+            var userNoList = new Array()
+            $("#num").find('input').each(function () {
+                var checkStatus = $(this.checked)[0]
+                if (checkStatus) {
+                    userNoList.push(this.parentNode.parentNode.dataset.userno)
+                }
+                ;
+            })
+
+            if (userNoList.length > 0) {
+                $("#delete_user_btn").attr("data-target", "#confirm_message")
+
+                $("#confirm").attr("data-userno", userNoList)
+
+            } else {
+                return toastr.error("选项不能为空")
+            }
+            ;
+        })
+    }
+
+
+    //删除用户确认框
+    function bindConfirm() {
+        $("#confirm").on("click", function () {
+            var confirm = $(this).attr("data-confirm")
+            if (confirm == "confirm") {
+                var userNoList = $("#confirm").attr("data-userno")
+                $.ajax({
+                    url: "/deleteUser/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        user_no_list: userNoList
+                    },
+                    success: function (result) {
+                        if (result.code == "200") {
+                            var btn = document.getElementById("cancel")
+                            btn.click()
+                            toastr.success(result.msg)
+                            bindRefresh()
+                        } else {
+                            return toastr.error(result.msg)
+                        }
+                    }
+                })
+            }
+
+        })
+    }
+
+
+    //获取编辑用户数据
+    function bindGetEditUser() {
+        $("#handel_user").on("click", "#edit_user_btn", function () {
+            var userNoList = new Array()
+            $("#num").find('input').each(function () {
+                var checkStatus = $(this.checked)[0]
+                if (checkStatus) {
+                    userNoList.push(this.parentNode.parentNode.dataset.userno)
+                }
+                ;
+            });
+
+            if (userNoList.length > 1) {
+                 $("#edit_user_btn").removeAttr("data-target", "#edit_user")
+                return toastr.error("一次只能选择一个用户进行编辑")
+            }
+
+            if (userNoList.length < 1) {
+                $("#edit_user_btn").removeAttr("data-target", "#edit_user")
+                return toastr.error("选项不能为空")
+            }
+            $("#edit_user_btn").attr("data-target", "#edit_user")
+            $.ajax({
+                url: "/editUser/",
+                type: "get",
+                dataType: "json",
+                data: {user_no: userNoList[0]},
+                success: function (result) {
+                    $("#edit_user_id").val(result.user_info[0].user_no)
+                    $("#edit_user_name").val(result.user_info[0].user_name)
+                    $("#edit_role_no").val(result.user_info[0].role_no)
+                    $("#edit_role_name").val(result.user_info[0].role_name)
+                    $("#edit_dept_no").val(result.user_info[0].dept_no)
+                    $("#edit_dept_name").val(result.user_info[0].dept_name)
+                    $("#edit_team_no").val(result.user_info[0].team_no)
+                    $("#edit_team_name").val(result.user_info[0].team_name)
+                    $("#edit_user_status").val(result.user_info[0].status)
+                    $("#edit_phone_no").val(result.user_info[0].mobile)
+                    $("#edit_email_no").val(result.user_info[0].email)
+                    }
+                });
+        })
+    }
+
+
+    // 提交编辑用户
+    function bindEditUser() {
+        $("#confirm_edit_user").on("click", function () {
+            var user_no = $("#edit_user_id").val()
+            var user_name = $("#edit_user_name").val()
+            var role_no = $("#edit_role_no").val()
+            var role_name = $("#edit_role_name").val()
+            var dept_no = $("#edit_dept_no").val()
+            var dept_name = $("#edit_dept_name").val()
+            var team_no = $("#edit_team_no").val()
+            var team_name = $("#edit_team_name").val()
+            var status = $("#edit_user_status").val()
+            var mobile = $("#edit_phone_no").val()
+            var email = $("#edit_email_no").val()
+
+            console.log('team_no:' + team_no)
+
+            if (user_no == "") {
+                return toastr.error("用户编号不能为空")
+            }
+            if (user_name == "") {
+                return toastr.error("用户姓名不能为空")
+            }
+            if (role_no == "") {
+                return toastr.error("用户角色不能为空")
+            }
+            if (dept_name == "") {
+                if (role_no != 's_admin' && role_no != 'admin') {
+                    return toastr.error("所属部门不能为空")
+                }
+            }
+
+            if (team_name == "") {
+                if (role_no != 's_admin' && role_no != 'admin' && role_no != 'C01') {
+                    return toastr.error("所属团队不能为空")
+                }
+            }
+            if (status == "") {
+                return toastr.error("用户状态不能为空")
+            }
+            if (email == "") {
+                return toastr.error("电子邮件不能为空")
+            }
+
+            $.ajax({
+                url: "/editUser/",
+                type: "post",
+                dataType: "json",
+                data: {
+                    user_no: user_no,
+                    user_name: user_name,
+                    role_no: role_no,
+                    role_name: role_name,
+                    dept_no: dept_no,
+                    dept_name: dept_name,
+                    team_no: team_no,
+                    team_name: team_name,
+                    status: status,
+                    mobile: mobile,
+                    email: email
+                },
+                success: function (result) {
+                    if (result.code == "400") {
+                        return toastr.error(result.msg)
+                    } else {
+                        var btn = document.getElementById("cancel_edit_user")
+                        btn.click()
+                        $("#edit_user_btn").removeAttr("data-target")
+                        toastr.success(result.msg)
+                        bindRefresh()
+                    }
+                    ;
+
+                }
+            });
+
+
+        })
+
+    }
+
+
+
+    //*****************************************************************************
+    //获取已x系统的系统
+    function bindGetSys() {
+
+        $("#create_user_btn").on("click", function () {
+
+            $.ajax({
+                url: "/querySys/",
+                type: "post",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result.sysList[0].sys_no)
+
+                    if (result.code == "200") {
+
+
+                        var select = document.getElementById("sys_list")
+                        for (var i = 0; i < (result.sysList.length); i++) {
+
+                            var option = document.createElement("option");
+                            option.value = result.sysList[i].sys_no
+                            option.text = result.sysList[i].sys_name
+                            select.options.add(option)
+                        }
+                         //使用refresh方法更新UI以匹配新状态。
+                        $('#sys_list').selectpicker('refresh');
+                        //render方法强制重新渲染引导程序 - 选择ui。
+                        $('#sys_list').selectpicker('render');
+
+                    } else {
+
+                            return   toastr.success(result.msg)
+                    }
+                    ;
+
+                }
+            });
+
+        })
+
+    }
+
+
+
+
+
+    //取消新建用户
+    function bindCancelCreateUser() {
+        $("#cancel_create_user").on("click", function () {
+            //新建用户
+            $("#user_no").val("")
+            $("#user_name").val("")
+            $("#role_no").val("")
+            $("#role_name").val("")
+            $("#dept_no").val("")
+            $("#dept_name").val("")
+            $("#team_no").val("")
+            $("#team_name").val("")
+            $("#userl_status").val("")
+            $("#phone_no").val("")
+            $("#email_no").val("")
+
+            // 编辑用户
+            $("#edit_user_no").val("")
+            $("#edit_user_name").val("")
+            $("#edit_role_no").val("")
+            $("#edit_role_name").val("")
+            $("#edit_dept_no").val("")
+            $("#edit_dept_name").val("")
+            $("#edit_team_no").val("")
+            $("#edit_team_name").val("")
+            $("#edit_userl_status").val("")
+            $("#edit_phone_no").val("")
+            $("#edit_email_no").val("")
+        })
+
+    }
+
+    //取消编辑用户
+    function bindCancelEditUser() {
+        $("#cancel_edit_user").on("click", function () {
+            // 编辑用户
+            $("#edit_user_no").val("")
+            $("#edit_user_name").val("")
+            $("#edit_role_no").val("")
+            $("#edit_role_name").val("")
+            $("#edit_dept_no").val("")
+            $("#edit_dept_name").val("")
+            $("#edit_team_no").val("")
+            $("#edit_team_name").val("")
+            $("#edit_userl_status").val("")
+            $("#edit_phone_no").val("")
+            $("#edit_email_no").val("")
+
+            // 新建用户
+            $("#user_no").val("")
+            $("#user_name").val("")
+            $("#role_no").val("")
+            $("#role_name").val("")
+            $("#dept_no").val("")
+            $("#dept_name").val("")
+            $("#team_no").val("")
+            $("#team_name").val("")
+            $("#userl_status").val("")
+            $("#phone_no").val("")
+            $("#email_no").val("")
+
+            $("#edit_user_btn").removeAttr("data-target")
+        })
+
+    }
+
+
+    // 生成序号
+    window.onload = function () {
+        var webTable = document.getElementById("num");
+        for (var i = 0; i < webTable.rows.length; i++) {
+            webTable.rows[i].cells[1].innerHTML = (i + 1);
+        }
+    }
+
+    //  全选
+    function selectAll(selectStatus) {
+        if (selectStatus) {
+            $("input[name='check']").each(function () {
+                $(this).prop("checked", true)
+            });
+        } else {
+            $("input[name='check']").each(function () {
+                $(this).prop("checked", false)
+            });
+        }
+    }
+
+</script>
+{% endblock%}
+
+
+
+
+
+
+

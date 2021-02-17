@@ -1,0 +1,51 @@
+.num {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 24px;
+}
+
+
+.user-info-form {
+    margin: 0 24px;
+}
+
+.text-muted {
+    color: #fff;
+
+}
+
+
+
+.table-style {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    border-spacing: 0;
+    border-collapse: collapse
+}
+
+ .table-style th {
+    font-weight: 600;
+    padding: 0
+}
+
+ .table-style td, .table-style th {
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+    white-space: nowrap;
+}
+
+ .table-style tr {
+    background-color: #fff;
+    border-top: 1px solid #c6cbd1
+}
+
+ .table-style tr:nth-child(2n) {
+    background-color: #f6f8fa
+}

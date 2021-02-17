@@ -1,0 +1,611 @@
+{% extends "layout.html" %}
+
+
+{% block css %}
+    <style>
+        .modal-body .input-group {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block content-one %}
+
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main">
+
+  <!--面包屑-->
+    <ol class="breadcrumb">
+        <li><a href="#">系统名称</a></li>
+        <li class="active">AF</li>
+    </ol>
+
+
+    <!--有遮罩层的进度条-->
+    <div class="modal fade" id="loadingModal" backdrop="static" keyboard="false">　　
+        <div style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 40%;height: 2rem;">　　　
+            <div class="progress " id="progress_bar">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45"
+                     aria-valuemin="0"
+                     aria-valuemax="100" style="width: 45%">
+                    <span class="sr-only">45% Complete</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!--查询条件-->
+    <form class="user-info-form form-inline" id="handel_query">
+
+        <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon1">用例编号</span>
+            <input type="text" class="form-control" placeholder="用例编号" aria-describedby="sizing-addon1" id="case_no">
+        </div>
+
+
+        <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon2">用例名称</span>
+            <input type="text" class="form-control" placeholder="用例名称" aria-describedby="sizing-addon2"
+                   id="case_name">
+        </div>
+
+
+        <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon2">测试者</span>
+            <input type="text" class="form-control" placeholder="测试者" aria-describedby="sizing-addon2" id="case_tester">
+        </div>
+
+
+
+
+        <div id="row2">
+
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon4">测试结果</span>
+                <select class="form-control" aria-describedby="sizing-addon4" id="test_res" style="width: 169px">
+                    <option >请选择</option>
+                    <option value=passed>passed</option>
+                    <option value=failed>failed</option>
+                    <option value=error>error</option>
+
+                </select>
+            </div>
+
+
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon5">开始时间</span>
+                <input type="text" class="form-control" placeholder="开始时间" aria-describedby="sizing-addon5"
+                       id="start_date">
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon6">结束时间</span>
+                <input type="text" class="form-control" placeholder="结束时间" aria-describedby="sizing-addon6"
+                       id="end_date">
+            </div>
+
+
+            <div class="input-group">
+                <button type="button" class="btn btn-default" id="search">查询</button>
+                <button type="reset" class="btn btn-default">重置</button>
+            </div>
+
+
+        </div>
+
+
+    </form>
+
+
+{% endblock %}
+
+
+ <!--用例列表-->
+{% block content-two %}
+
+    <div class="user-info-btn-wrapper" id="handel_case">
+
+
+        {% if role_no == "admin" %}
+
+        {% else %}
+
+        {% endif %}
+
+        <!--构建用例-->
+        <button type="button" class="btn btn-success" id="build_case_btn" data-toggle="modal"
+                data-target="#build_case" onclick="clearBuildHistoryRecord()" >构建用例
+        </button>
+
+
+        <div class="modal fade" id="build_case" tabindex="-1" role="dialog"
+             aria-labelledby="createUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="buildCaseModalLabel">
+                            构建用例
+                        </h4>
+                    </div>
+
+                    <!--模态框内容-->
+                    <div class="modal-body">
+
+                        <div class="input-group">
+                            <span class="input-group-addon" id="sizing-addon"
+                                  style="margin-top: 10px;margin-bottom: 10px">所属版本</span>
+                            <select class="form-control selectpicker" aria-describedby="sizing-addon" id="release"
+                                    multiple="multiple" title="请选择版本"
+                                    style="width: 100%">
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <!--模态框内容-->
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="cancel_build_case"
+                                data-dismiss="modal">取消
+                        </button>
+                        <button type="button" class="btn btn-primary" id="submit_build_case">
+                            提交
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!--构建用例莫泰对话框-->
+
+
+
+        <a href="#">
+            <button type="btn btn-default" class="btn btn-warning" id="download_case_btn">导出测试用例</button>
+        </a>
+
+        <a href="#">
+            <button type="btn btn-default" class="btn btn-primary" id="download_report_btn">查看最近一次测试报告</button>
+        </a>
+
+    </div>
+
+
+    <div id="home" style="margin-top: 40px">
+        <table class="table" id="table">
+            <h3>用例列表</h3>
+            <thead>
+            <tr class="info">
+
+                <td class="active">
+                    <input type="checkbox" style="margin: 0 8px 0 0; width: 16px;height: 16px" value="Car"
+                           name="check" onclick="selectAll(this.checked)">
+                </td>
+                <td>序号</td>
+                <td> 用例编号</td>
+                <td>用例名称</td>
+                <td>所属版本</td>
+                <td>测试场景</td>
+                <td>预期结果</td>
+                <td>实际结果</td>
+                <td>测试结果</td>
+                <td>测试者</td>
+                <td>测试时间</td>
+            </tr>
+            </thead>
+
+            <tbody id="num">
+
+            {% for item in data_list %}
+                <tr class="active" data-caseNo={{ item.case_no }}>
+                    <td class="active">
+                        <input type="checkbox" style="margin: 0 8px 0 0; width: 16px;height: 16px" value="Car"
+                               name="check">
+                    </td>
+                    <td></td>
+                    <td caseNo={{ item.case_no }} class="caseNo">{{ item.case_no }}</td>
+                    <td>{{ item.case_name }}</td>
+                    <td>{{ item.ver_no }}</td>
+                    <td>{{ item.case_story }}</td>
+                     <td>{{ item.exp_res }}</td>
+                    <td>{{ item.act_res }}</td>
+                     <td>{{ item.test_res }}</td>
+                    <td>{{ item.tester }}</td>
+                    <td>{{ item.create_time }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+
+        <nav aria-label="Page navigation" id="nav_page">
+             <span style="display: inline-block; line-height: 79px">
+                     总数:{{ case_count }}条 第{{ cur_page }}页 / 共{{ case_pager.page_range|length }}页&nbsp;&nbsp;
+                </span>
+            <ul class="pagination" id="case_pager">
+
+                <!--如果当前页有上一页当前页的上一页按钮正常使用-->
+                {% if previous_next_page.has_previous %}
+
+                    <li class="previous"><a
+                            href="{{ url_path }}?page={{ previous_next_page.previous_page_number }}">上一页</a>
+                    </li>
+
+                    <!--{当前页的不存在上一页时,上一页的按钮不可用-->
+                {% else %}
+                    <li class="previous disabled"><a href="#">上一页</a></li>
+
+                    <!--上一页按钮结束页码开始-->
+                {% endif %}
+
+                {% if cur_page|add:-4 > 1 %}
+                    <li class="item"><a href="{{ url_path }}?page={{ cur_page|add:-5 }}"><<</a></li>
+                {% endif %}
+
+                {% for num in case_pager.page_range %}
+
+                    {% if num == cur_page %}
+                        <li class="item active"><a href="{{ url_path }}?page={{ num }}">{{ num }}</a></li>
+
+                    {% else %}
+
+                        {% if cur_page > 2 %}
+
+                            {% if num < cur_page|add:3 and num > cur_page|add:-3 and cur_page > 2 %}
+                                <li class="item"><a href="{{ url_path }}?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+
+                        {% elif num > 0 and num < 6 %}
+                            <li class="item"><a href="{{ url_path }}?page={{ num }}">{{ num }}</a></li>
+
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                {% if cur_page|add:1 < pending_pager.page_range|length %}
+                    <li class="item disabled"><a href="#">...</a></li>
+                {% endif %}
+
+                {% if cur_page|add:4 < case_pager.page_range|length %}
+                    <li class="item"><a href="{{ url_path }}?page={{ cur_page|add:5 }}">>></a></li>
+                {% endif %}
+
+                <!--下一页按钮开始-->
+                {% if previous_next_page.has_next %}
+                    <li class="next"><a href="{{ url_path }}?page={{ previous_next_page.next_page_number }}">下一页</a></li>
+
+                {% else %}
+                    <li class="next disabled"><a href="#">下一页</a></li>
+
+                {% endif %}
+                <!--下一页按钮结束-->
+            </ul>
+        </nav>
+    </div>
+
+{% endblock %}
+
+</div>
+
+
+{% block js %}
+    <script>
+        $(function () {
+
+            //查询测试用例
+            bindQueryCase();
+
+           //导出测试用例
+           bindExportCase()
+
+            //查看测试报告
+           bindDownloadReport()
+
+
+            //获取用例版本号
+           bindGetRelease()
+
+           //构建用例
+           bindBuildCase()
+
+
+            bindStartDate()
+            bindEndDate()
+
+
+        });
+
+
+
+        //获取版本号
+        function bindGetRelease() {
+
+            $("#build_case_btn").on("click", function () {
+
+                $.ajax({
+                    url: "/querySysRelease/",
+                    type: "post",
+                    data:{"sys_name":"AF"},
+                    dataType: "json",
+                    success: function (result) {
+
+                        if (result.code == "200") {
+                            if (result.release_no.length >= 1) {
+                                 var select = document.getElementById("release")
+                                 var option1 = document.createElement('option')
+                                 option1.text = "全部"
+                                 option1.value = "all"
+                                select.options.add(option1)
+
+                                for (var i = 0; i < (result.release_no.length); i++) {
+                                    var option2 = document.createElement('option')
+                                    option2.text = result.release_no[i]
+                                    option2.value = result.release_no[i]
+
+                                    select.options.add(option2)
+                                }
+
+                                //使用refresh方法更新UI以匹配新状态。
+                                $('#release').selectpicker('refresh');
+                                //render方法强制重新渲染引导程序 - 选择ui。
+                                $('#release').selectpicker('render');
+                            }
+
+
+                        } else {
+
+                            return toastr.success(result.msg)
+                        }
+                        ;
+
+                    }
+                });
+
+            })
+
+        }
+
+
+        // 构建用例
+        function bindBuildCase() {
+            $("#submit_build_case").on("click", function () {
+
+                $("#cancel_build_case").click()
+
+                var caseRelease = $("#release").val()
+                if(caseRelease ==""){
+                  return toastr.error('所属版本不能为空')
+                 }
+                showProgressBar()
+                $.ajax({
+                    url: '/buildCase/',
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        case_release: caseRelease,
+                        sys_name: "AF"
+                    },
+                    success: function (result) {
+                        if(result.code == '200'){
+                            hiddenProgressBar()
+                            toastr.success(result.msg)
+                            bindRefresh()
+                        }
+
+                    }
+                })
+
+            })
+
+        }
+
+
+        //查询用例
+        function bindQueryCase() {
+            $("#handel_query").on("click", "#search", function () {
+                var caseNo = $("#case_no").val()
+                var caseTester = $("#case_tester").val()
+                var caseName = $("#case_name").val()
+                var testRes = $("#test_res").val()
+                var startDate = $("#start_date").val()
+                var endDate = $("#end_date").val()
+
+                if(testRes == "请选择"){
+                    testRes = ""
+                }
+
+                 //在浏览器中进行本地存储
+                 window.localStorage.setItem("sys_name","AF")
+                 window.localStorage.setItem("case_no",caseNo)
+                 window.localStorage.setItem("tester",caseTester)
+                 window.localStorage.setItem("case_name",caseName)
+                 window.localStorage.setItem("test_result",testRes)
+                 window.localStorage.setItem("create_time",startDate)
+                 window.localStorage.setItem("end_time",endDate)
+
+
+                //发送查询get请求
+                var url = "/queryAFCase?" +
+                    "code=" + "search" +
+                     "&sys_name=" + "AF" +
+                     "&case_no=" + caseNo +
+                    "&tester=" + caseTester +
+                    "&case_name=" + caseName +
+                     "&test_res=" + testRes +
+                    "&create_time=" + startDate +
+                    "&end_time=" + endDate
+                window.location.href = url
+
+            })
+
+        }
+
+
+        // 导出用例
+         function bindExportCase() {
+            $("#download_case_btn").on("click", function () {
+
+                var sys_name = localStorage.getItem("sys_name");
+                var case_no = localStorage.getItem("case_no");
+                var tester = localStorage.getItem("tester");
+                var test_res = localStorage.getItem("test_res");
+                var case_name = localStorage.getItem("case_name");
+                var create_time = localStorage.getItem("create_time");
+                var end_time = localStorage.getItem("end_time");
+
+
+                localStorage.removeItem("sys_name");
+                localStorage.removeItem("case_no");
+                localStorage.removeItem("tester");
+                localStorage.removeItem("test_res");
+                localStorage.removeItem("case_name");
+                 localStorage.removeItem("create_time");
+                 localStorage.removeItem("end_time");
+
+
+                $.ajax({
+                url: "/exportCase/",
+                type: "post",
+                data: {
+                    sys_name: sys_name,
+                    case_no: case_no,
+                    tester: tester,
+                     test_res: test_res,
+                    case_name:case_name,
+                    create_time: create_time,
+                    end_time: end_time
+                },
+                dataType: "json",
+                success: function (result) {
+
+                    if (result.code == "200") {
+
+                        var a = document.createElement("a")
+                        a.href = result.data
+                        a.click()
+                    }
+                    ;
+                }
+
+            })
+
+            })
+
+        }
+
+        //下载测试报告
+        function bindDownloadReport() {
+                $("#download_report_btn").on("click", function () {
+
+                    $.ajax({
+                    url: "/downloadReport/",
+                    type: "post",
+                    data: {
+                        sys_name: 'AF'
+                    },
+                    dataType: "json",
+                    success: function (result) {
+
+                        if (result.code == "200") {
+
+                            var a = document.createElement("a")
+                            a.href = result.data
+                            a.click()
+                        }else{
+                            return toastr.error(result.msg)
+                        }
+                    }
+
+                })
+
+
+
+
+
+
+                })
+
+            }
+
+        //  全选
+        function selectAll(selectStatus) {
+            if (selectStatus) {
+                $("input[name='check']").each(function () {
+                    $(this).prop("checked", true)
+                });
+            } else {
+                $("input[name='check']").each(function () {
+                    $(this).prop("checked", false)
+                });
+            }
+        }
+
+
+        //格式化时间
+        function bindStartDate() {
+            $("#start_date").datetimepicker({
+                bootcssVer: 3,
+                format: 'yyyy-mm-dd',
+                minView: 'month',
+                todayBtn: true,
+                language: 'zh-CN',
+                autoclose: true,
+                keyboardNavigation: true,
+                forceParse: true,
+                todayHighlight: 1
+            }).on("click", function () {
+                // $("#input_date").datetimepicker("setEndDate", getToday())
+                $("#start_date").datetimepicker()
+            });
+        }
+
+
+        function bindEndDate() {
+            $("#end_date").datetimepicker({
+                bootcssVer: 3,
+                format: 'yyyy-mm-dd',
+                minView: 'month',
+                todayBtn: true,
+                language: 'zh-CN',
+                autoclose: true,
+                keyboardNavigation: true,
+                forceParse: true,
+                todayHighlight: 1
+            }).on("click", function () {
+                // $("#input_date").datetimepicker("setEndDate", getToday())
+                $("#end_date").datetimepicker()
+            });
+        }
+
+
+        //进度条
+        function showProgressBar() {
+            $('#loadingModal').modal({backdrop: 'static', keyboard: false});
+        }
+
+        function hiddenProgressBar() {
+            $('#loadingModal').modal('hide');
+        }
+
+        //清除构建用例所选的历史记录
+        function clearBuildHistoryRecord() {
+            $(" #release option option").remove()
+
+        }
+
+    </script>
+{% endblock %}
+
+
+
+
+
+
+

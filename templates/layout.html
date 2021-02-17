@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--<link rel="icon" href="https://v3.bootcss.com/favicon.ico">-->
+
+    <title>任务管理平台</title>
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="/static/css/toastr.min.css" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-table.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-select.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
+
+    <link href="/static/css/app.css" rel="stylesheet">
+    <link href="/static/css/fselect.css" rel="stylesheet">
+
+
+    <!--<link href="/static/fonts/glyphicons-halflings-regular.eot" rel="stylesheet">-->
+    <!--<link href="/static/fonts/glyphicons-halflings-regular.svg" rel="stylesheet">-->
+    <!--<link href="/static/fonts/glyphicons-halflings-regular.ttf" rel="stylesheet">-->
+    <!--<link href="/static/fonts/glyphicons-halflings-regular.woff" rel="stylesheet">-->
+    <!--<link href="/static/fonts/glyphicons-halflings-regular.woff2" rel="stylesheet">-->
+
+    <style>
+        .user-info-form, .user-info-btn-wrapper {
+            margin: 20px 0;
+        }
+
+        #message_success {
+            position: absolute;
+            right: -30px;
+            top: 0px;
+            width: 300px;
+        }
+
+        #main {
+            margin-left: 185px;
+        }
+
+        #handel_query div input {
+            width: 170px;
+        }
+
+        #handel_query div {
+            margin-right: 50px;
+            margin-bottom: 20px;
+        }
+
+        #handel_case button {
+            margin-right: 10px;
+
+        }
+
+        #handel_query_row2 {
+            margin-top: 10px;
+        }
+
+        #handel_query_user div {
+            width: 250px;
+        }
+
+        #search {
+            margin-right: 20px;
+        }
+
+        /*.home_page {*/
+        /*!*font-weight: bold;*!*/
+        /*!*font-size: 20px;*!*/
+        /*!*color: red!important;*!*/
+        /*color: #fff;*/
+        /*background-color: #428bca;*/
+        /*}*/
+
+        #nav_page {
+            display: flex;
+            align-items: center
+        }
+
+        .test-num {
+            text-decoration: underline;
+        {#color: #FFFFFF;#} font-size: 18px;
+            font-style: initial;
+            margin-bottom: 20px;
+        }
+
+        .caption {
+            background-color: #c8c8c8;
+
+        }
+
+        .pass {
+            color: green;
+        }
+
+        .fail {
+            color: brown;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .center-wrap {
+            display: flex;
+            align-items: center;
+        {#justify-content: space-between;#}
+        }
+
+        .thumbnail {
+            margin-right: 60px;
+        }
+
+        #system_menu li, #set_menu li {
+            {#list-style-type: none;#}
+            margin-bottom: 20px;
+            margin-top: 20px;
+
+        }
+
+
+    </style>
+
+
+    {% block css %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">接口测试管理平台</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+
+            <div class="btn-group"></div>
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if role_no == "admin" or role_no == "s_admin" %}
+                    <li><a href="#" id="clear_cache">清除缓存</a></li>
+                {% endif %}
+
+                <li><a href="#">消息</a></li>
+                <li><a href="#">用户 | {{ user_no }}</a></li>
+
+                <!--关联修改密码对话框-->
+                <li><a href="#" id="modify_pwd" data-toggle="modal" data-target="#model_modify_pwd"
+                       onclick="clearInputCache()">修改密码</a></li>
+
+                <li><a href="/logout">退出</a></li>
+            </ul>
+
+            <!--<form class="navbar-form navbar-right">-->
+            <!--<input class="form-control" placeholder="Search..." type="text">-->
+            <!--</form>-->
+
+        </div>
+
+
+    </div>
+
+
+</nav>
+
+
+{% block content-one %}
+{% endblock %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar" id="menu_list" style="width: 220px">
+
+            <ul class="nav nav-sidebar">
+                <li><a href="/home" id="home_page" class="home_page">首页</a></li>
+            </ul>
+
+        <h3></h3>
+
+            <ul class="nav nav-sidebar">
+                <li><a href="#" id="system_manage" onclick="bindSysMgeMenuStyle()">系统名称</a></li>
+                <ul id="system_menu">
+                    {% for menu_name,menu_path in user_sys_dict.items %}
+                          <li><a href={{menu_path}}>{{ menu_name }} </a></li>
+
+                     {% endfor%}
+
+                </ul>
+            </ul>
+
+
+            <ul class="nav nav-sidebar">
+
+                <li><a href="#" id="system_set" onclick="bindSysSetMenuStyle()">系统设置</a></li>
+
+                <ul id="set_menu">
+                    <li><a href="/sysManage">系统管理</a></li>
+{#                    <li><a href="/permissionManage">权限管理</a></li>#}
+                    <li><a href="/userManage">用户管理</a></li>
+                    <li><a href="#" id="reset_pwd_btn" data-toggle="modal" data-target="#model_reset_pwd"
+                           onclick="clearInputCache()">重置密码 </a></li>
+                </ul>
+            </ul>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!--修改密码莫泰对话框  -->
+<div class="modal fade" id="model_modify_pwd" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--<button type="button" class="close"-->
+                <!--data-dismiss="modal" aria-hidden="true">-->
+                <!--×-->
+                <!--</button>-->
+                <h4 class="modal-title" id="myModalLabel">
+                    修改密码
+                </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="sizing_old_pwd"
+                          style="margin-top: 10px;margin-bottom: 10px">旧密码</span>
+                    <input type="password" class="form-control" placeholder="旧密码" aria-describedby="sizing_old_pwd"
+                           id="old_pwd">
+                </div>
+
+                <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                    <span class="input-group-addon" id="sizing_new_pwd1" style="margin: 100px">新密码</span>
+                    <input type="password" class="form-control" placeholder="新密码" aria-describedby="sizing_new_pwd1"
+                           id="new_pwd1">
+                </div>
+
+                <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                    <span class="input-group-addon" id="sizing_new_pwd2" style="margin: 100px">新密码</span>
+                    <input type="password" class="form-control" placeholder="确认密码" aria-describedby="sizing_new_pwd2"
+                           id="new_pwd2">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="cancel_modify_pwd"
+                        data-dismiss="modal">取消
+                </button>
+                <button type="button" class="btn btn-primary" id="modify_pwd_btn">
+                    确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!--重置密码莫泰对话框-->
+<div class="modal fade" id="model_reset_pwd" tabindex="-1" role="dialog"
+     aria-labelledby="resetPwdModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--<button type="button" class="close"-->
+                <!--data-dismiss="modal" aria-hidden="true">-->
+                <!--×-->
+                <!--</button>-->
+                <h4 class="modal-title" id="resetPwdModalLabel">
+                    重置密码
+                </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="reset_user_no"
+                          style="margin-top: 10px;margin-bottom: 10px">用户编号</span>
+                    <input type="text" class="form-control" placeholder="用户编号" aria-describedby="reset_user_no"
+                           id="user_no">
+                </div>
+
+                <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                    <span class="input-group-addon" id="reset_new_pwd1"
+                          style="margin: 100px">&nbsp;&nbsp;&nbsp; 新密码</span>
+                    <input type="password" class="form-control" placeholder="新密码" aria-describedby="reset_new_pwd1"
+                           id="reset_new_pwd_1">
+                </div>
+
+                <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
+                    <span class="input-group-addon" id="reset_new_pwd2"
+                          style="margin: 100px"> &nbsp;&nbsp;&nbsp; 新密码</span>
+                    <input type="password" class="form-control" placeholder="确认密码" aria-describedby="reset_new_pwd2"
+                           id="reset_new_pwd_2">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="cancel_reset_pwd"
+                        data-dismiss="modal">取消
+                </button>
+                <button type="button" class="btn btn-primary" id="submit_reset_pwd">
+                    提交
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+{% if  home_url == '/homePage' %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main">
+
+        <div class="row placeholders">
+
+            {#                    动态生成所属权限的系统统计数据#}
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="num bg-primary">
+                    <h3>{{ all_sys_test_case_data_dict.passed_count }}</h3>
+                    <p class="text-muted">测试通过数</p>
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="num bg-primary">
+                    <h3>{{ all_sys_test_case_data_dict.failed_count }}</h3>
+                    <p class="text-muted">测试失败数</p>
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="num bg-primary">
+
+                    <h3>{{ all_sys_test_case_data_dict.error_count }}</h3>
+                    <p class="text-muted">运行错误数</p>
+                </div>
+            </div>
+
+            <div class="col-xs-8 col-sm-3 placeholder">
+                <div class="num bg-primary">
+                    <h3>{{ all_sys_test_case_data_dict.sum_count }}</h3>
+                    <p class="text-muted">测试用例总数</p>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div id="home" style="margin-left: 0px">
+            <div class="row">
+                <div class="col-sm-5 col-md-3 center-wrap">
+
+{#                    动态生成所属权限的系统统计数据#}
+                    {% for key,value in single_sys_test_data_dict.items %}
+                        {% if key in user_sys_dict.keys %}
+                        <div class="thumbnail">
+                            <div class="caption" >
+                                 <!--key为系统名称，/ keySys为菜单路由-->
+                                <h3 id="sysGroup"><a  id="{{key}}"  class="btn btn-default" role="button" style="width: 150px" href="/{{ key }}Sys">{{ key }}</a></h3>
+
+
+{#                                 <h3><a id="menuPath" class="btn btn-default" role="button" style="width: 150px" onclick="toLowerCase({{ key }})" >{{ key }}</a></h3>#}
+
+
+                                <p class="test-num pass">测试通过数:{{ value.passed }}</p>
+                                <p class="test-num fail">测试失败数:{{ value.failed }}</p>
+                                <p class="test-num error">运行错误数:{{ value.error }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+{% endif %}
+
+
+
+
+
+{% block content-two %}
+
+{% endblock %}
+
+
+<script src="/static/js/jquery-2.1.4.min.js"></script>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/pagination.js"></script>
+<script src="/static/js/holder.js"></script>
+<script src="/static/js/fselect.js"></script>
+<!--<script src="/static/js/toastr.min.js"></script>-->
+<script src="/static/js/toastr.min.js"></script>
+<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/static/js/bootstrap-table.js"></script>
+<script src="/static/js/bootstrap-table.min.js"></script>
+<script src="/static/js/bootstrap-table-zh-CN.js"></script>
+<script src="/static/js/bootstrap-select.js"></script>
+<script src="/static/js/bootstrap-select.js"></script>
+
+{% block js %}
+
+{% endblock %}
+
+
+<script>
+
+    $(function () {
+
+        bindResetPwd();
+        bindClearCache();
+        showHighLight();
+        //bindHomeSysHref();
+
+
+        //bindDefaultMenuStyle()
+
+
+    });
+
+
+    function showHighLight() {
+
+    }
+
+   //重置密码
+    function bindResetPwd() {
+        $("#submit_reset_pwd").on("click", function () {
+            var userNo = $("#user_no").val()
+            var newPwd1 = $("#reset_new_pwd_1").val()
+            var newPwd2 = $("#reset_new_pwd_2").val()
+            if (userNo == "") {
+                return toastr.error("用户编号不能为空")
+            }
+            ;
+            if (newPwd1 == "") {
+                return toastr.error("新密码不能为空")
+            }
+            ;
+            if (newPwd2 == "") {
+                return toastr.error("确认密码不能为空")
+            }
+            ;
+
+            if (newPwd1 != newPwd2) {
+                return toastr.error("两次密码不一致")
+            }
+            ;
+
+            $.ajax({
+                url: "/resetPwd/",
+                type: 'post',
+                dataType: "json",
+                data: {
+                    user_no: userNo,
+                    new_pwd1: newPwd1,
+                    new_pwd2: newPwd2
+                },
+                success: function (result) {
+                    if (result.code == "200") {
+
+                        toastr.success(result.msg);
+                        var button = document.getElementById("cancel_reset_pwd")
+                        button.click()
+
+                    } else {
+
+                        toastr.error(result.msg);
+
+                    }
+                    ;
+
+                }
+            })
+        })
+
+    }
+
+
+    // 清除密码、用户缓存
+    function clearInputCache() {
+        $("#user_no").val("")
+        $("#reset_new_pwd_1").val("")
+        $("#reset_new_pwd_2").val("")
+
+        $("#old_pwd").val("")
+        $("#new_pwd1").val("")
+        $("#new_pwd2").val("")
+
+        $("#project_name").val("")
+        $("#project_desc").val("")
+
+        // 给select添加默认值
+        $("#project_property").val("0")
+
+    }
+
+    //清除缓存(历史查询记录)
+    function bindClearCache() {
+        $("#clear_cache").on("click", function () {
+            $.ajax({
+                url: "/clearCache/",
+                type: 'get',
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == "200") {
+                        toastr.success(result.msg);
+                    } else {
+
+                        toastr.error(result.msg);
+
+                    }
+                    ;
+
+                }
+            })
+        })
+
+    }
+
+
+    function clearLocalStorage() {
+        localStorage.removeItem("code");
+        localStorage.removeItem("task_no");
+        localStorage.removeItem("task_name");
+        localStorage.removeItem("task_priority");
+        localStorage.removeItem("start_time");
+        localStorage.removeItem("end_time");
+
+    }
+
+
+    function bindDefaultMenuStyle() {
+
+        $("#system_menu").css("display", "none")
+        $("#set_menu").css("display", "none")
+
+    }
+
+    //系统名称菜单样式
+    function bindSysMgeMenuStyle() {
+
+        var displayVla = $("#system_menu").css("display")
+
+
+        if (displayVla == "block") {
+            $("#system_menu").css("display", "none")
+
+        } else {
+
+            $("#system_menu").css("display", "block")
+        }
+        ;
+
+    }
+
+   //系统设置菜单样式
+    function bindSysSetMenuStyle() {
+
+        var displayVla = $("#set_menu").css("display")
+
+
+        if (displayVla == "block") {
+            $("#set_menu").css("display", "none")
+
+        } else {
+
+            $("#set_menu").css("display", "block")
+        }
+        ;
+
+    }
+
+
+    //一秒后刷新
+    function bindRefresh() {
+        setTimeout(function () {
+            location.reload()
+        }, 1000);
+    }
+
+
+    //首页系统菜单跳转(只有第一个系统会跳转，后面的都不会自动跳转)
+    function bindHomeSysHref() {
+        $("#sysNameGroup").on("click","a",function () {
+             sysName = this.id
+             sysName = sysName.toLowerCase()
+            sysPath = '/'+sysName+'Sys'
+            console.log('ty:'+sysPath)
+            var a = document.createElement("a")
+            a.href =sysPath
+            a.click()
+        })
+        
+    }
+
+
+    function toLower(word) {
+        var lowerWord = word.toLowerCase()
+        return lowerWord
+
+
+    }
+
+    // 生成序号
+    window.onload = function () {
+        var webTable = document.getElementById("num");
+        for (var i = 0; i < webTable.rows.length; i++) {
+            webTable.rows[i].cells[1].innerHTML = (i + 1);
+        }
+    }
+
+
+</script>
+
+</body>
+
+
+</html>
+
+
+
+
+
