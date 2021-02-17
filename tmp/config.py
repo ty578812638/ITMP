@@ -50,53 +50,6 @@ user_status = {
 }
 
 
-#统计各个系统用例执行结果
-all_sys_dict ={
-    'AF':{
-        'passed':[],
-        'failed': [],
-        'error': [],
-        'path':'/afSys',
-    },
-     'AC':{
-        'passed':[],
-        'failed': [],
-        'error': [],
-         'path': '/acSys',
-
-    },
-    'TD':{
-        'passed':[],
-        'failed': [],
-        'error': [],
-        'path': '/tdSys',
-    },
-    'TP':{
-        'passed':[],
-        'failed': [],
-        'error': [],
-        'path': '/tpSys',
-    },
-    'CODE':{
-        'passed':[],
-        'failed': [],
-        'error': [],
-        'path': '/codeSys',
-    },
-}
-
-
-#系统菜单
-sys_menu_dict ={
-    'AF':'/afSys',
-     'AC':'/acSys',
-    'TD':'/tdSys',
-    'TP': '/tpSys',
-    'CODE': '/codeSys',
-}
-
-
-
 #初始密码
 init_pwd = '123456'
 
@@ -132,6 +85,11 @@ mail_info = {
 
 
 #导出字段(和数据库字段需对应上)
+
+
+#
+
+
 case_fields = ['系统名称','版本编号','用例名称','用例编号','测场景','预期结果','实际结果','测试者','测试结果','测试时间']
 
 

@@ -43,11 +43,12 @@ urlpatterns = [
    re_path(r'^(?i)querySys/$', views.query_sys),
 
 
-
-
 #'''********** 用户管理 **********''',
     re_path(r'^(?i)userManage/$', views.user_manage),
     re_path(r'^(?i)createUser/$', views.create_user),
+    re_path(r'^(?i)deleteUser/$', views.delete_user),
+    re_path(r'^(?i)editUser/$', views.edit_user),
+
 
 
 #'''********** 公用 **********''',

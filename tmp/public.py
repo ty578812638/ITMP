@@ -277,8 +277,6 @@ def update_token(request, user, html_page):
 
 
 
-
-
 def exe_remote_win_cmd(host, username, password,case_info):
     """
     在 windows 下执行命令

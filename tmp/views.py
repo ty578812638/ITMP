@@ -406,6 +406,7 @@ def login(request):
         user_info = db_user_info.handel_query_user_info(('salt'), **{'user_no': user})
         salt = user_info[0]['salt']
 
+
         get_md5_pwd = public.generate_md5_pwd(pwd, salt)
         md5_pwd = get_md5_pwd[0]
         user_info = db_user_info.handel_query_user_info(**{'user_no': user, 'pwd': md5_pwd})
@@ -666,32 +667,30 @@ def create_user(request):
         request_data = dict(request_data)
         print('创建用户请求数据:', request_data)
 
-        user_data_dict = {
-            'pwd': config.init_pwd,
-            'creator': user_no,
-            'create_time': get_cur_time.complete_time()
-        }
-
-        new_user =  request_data.get('user_no')
-        user_name = request_data.get('user_name')
-        sys_no = request_data.get('sys_no[]')
-
-
-
-        if  not new_user:
+        new_user_no =  request_data.get('user_no')
+        if  not new_user_no:
             return HttpResponse(json.dumps({'code': '400', 'msg': '用户编号不能为空' }, ensure_ascii=False))
 
-        if not user_name:
+        new_user_name = request_data.get('user_name')
+        if not new_user_name:
             return HttpResponse(json.dumps({'code': '400', 'msg': '用户姓名不能为空'}, ensure_ascii=False))
 
+        sys_no = request_data.get('sys_no[]')
         if not sys_no:
             return HttpResponse(json.dumps({'code': '400', 'msg': '所属系统不能为空'}, ensure_ascii=False))
 
-        user_exist = db_user_info.handel_query_user_info(**{'user_no':new_user[0]})
-
+        user_exist = db_user_info.handel_query_user_info(**{'user_no':new_user_no[0]})
         if  user_exist:
-            return HttpResponse(json.dumps({'code': '400', 'msg': '%s 用户已存在'%new_user}, ensure_ascii=False))
+            return HttpResponse(json.dumps({'code': '400', 'msg': '%s 用户已存在'%new_user_no}, ensure_ascii=False))
 
+        #给用户生成默认密码
+        md5_pwd = public.generate_md5_pwd(config.init_pwd)
+        user_data_dict = {
+            'pwd': md5_pwd[0],
+            'salt': md5_pwd[1],
+            'creator': user_no,
+            'create_time': get_cur_time.complete_time()
+        }
 
         for k,v in request_data.items():
             user_data_dict[k] = v[0]
@@ -720,7 +719,7 @@ def delete_user(request):
 
         if user_no_list:
             for user_no in user_no_list:
-                getUserInfo.hand_delete_user(user_no)
+                db_user_info.hand_delete_user(user_no)
             return HttpResponse(json.dumps({'code': '200', 'msg': '删除成功'}, ensure_ascii=False))
 
         else:
@@ -884,10 +883,10 @@ def edit_user(request):
             return HttpResponse(json.dumps({'code': '400', 'msg': '用户编号不能为空'}))
 
         user_no = request.GET.get('user_no')
-        user_info = getUserInfo.handel_query_user_info(**{'user_no': user_no})
+        user_info = db_user_info.handel_query_user_info(**{'user_no': user_no})
 
         del user_info[0]['create_time']
-        del user_info[0]['update_person']
+        del user_info[0]['updater']
         del user_info[0]['update_time']
         return HttpResponse(json.dumps({'user_info': user_info}))
 
@@ -897,27 +896,19 @@ def edit_user(request):
         print('编辑用户请求数据:', request_data)
 
         data_dict = {
-            'update_person': user,
+            'updater': user,
             'update_time': get_time.complete_time()
         }
         if request_data:
-            if request_data['role_no'][0] != 's_admin':
                 for k, v in request_data.items():
-                    if k not in ['team_name', 'team_no', 'mobile']:
-                        if not v[0]:
-                            return HttpResponse(json.dumps({'code': '400', 'msg': '【%s】不能为空' % k}))
-                    data_dict[k] = v[0]
+                    if  v[0]:
+                        data_dict[k] = v[0]
+                    else:
+                        return HttpResponse(json.dumps({'code': '400', 'msg': '【%s】不能为空' % k}))
 
-            else:
-                for k, v in request_data.items():
-                    if k not in ['dept_name', 'dept_no', 'team_name', 'team_no', 'mobile']:
-                        if not v[0]:
-                            return HttpResponse(json.dumps({'code': '400', 'msg': '【%s】不能为空' % k}))
-                    data_dict[k] = v[0]
+        db_user_info.hand_update_user(**data_dict)
 
-            getUserInfo.hand_update_user(**data_dict)
-
-            return HttpResponse(json.dumps({'code': '200', 'msg': '编辑成功'}))
+        return HttpResponse(json.dumps({'code': '200', 'msg': '编辑成功'}))
 
 
 
@@ -1198,6 +1189,7 @@ def query_sys(request):
 
         print('sys_list:', sys_list)
         return HttpResponse(json.dumps(sys_list))
+
 
 
 

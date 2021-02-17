@@ -102,8 +102,8 @@
                             <span class="input-group-addon" id="sizing-addon">用户状态</span>
                             <select class="form-control" aria-describedby="sizing-addon" id="user_status"
                                     style="width: 100% ">
-                                <option value="有效" selected="selected">有效</option>
-                                <option value="无效">失效</option>
+                                <option value="0" selected="selected">有效</option>
+                                <option value="1">失效</option>
 
                             </select>
                         </div>
@@ -154,6 +154,7 @@
                     <!--模态框内容-->
                     <div class="modal-body">
 
+                         <!--用户编号   -->
                         <div class="input-group" style="margin-bottom: 10px">
                             <span class="input-group-addon" id="edit_user_no"
                                   style="margin-top: 10px;margin-bottom: 10px">用户编号</span>
@@ -162,7 +163,7 @@
 
                         </div>
 
-
+                         <!--用户姓名   -->
                         <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
                             <span class="input-group-addon" id="sizing_user_name_1"
                                   style="margin-top: 10px;margin-bottom: 10px">用户姓名</span>
@@ -170,58 +171,23 @@
                                    aria-describedby="sizing_user_name_1" id="edit_user_name">
                         </div>
 
-
-                        <div class="input-group">
-                            <span class="input-group-addon" id="sizing_role_no_1"
-                                  style="margin-top: 10px;margin-bottom: 10px">角色编号</span>
-                            <input type="text" class="form-control" placeholder="角色编号"
-                                   aria-describedby="sizing_role_no_1" disabled="disabled" id="edit_role_no">
-                            <input type="text" class="hidden" placeholder="角色名称" id="edit_role_name">
-
-                            <div class="input-group-addon" id="edit_user_head">
-                                <button type="button" data-toggle="modal" data-target="#select_role" id="edit_get_role">
-                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                </button>
-                            </div>
-
-                        </div>
-
-
-                        <!--选择部门   -->
+                        <!--所属系统   -->
                         <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
-                            <span class="input-group-addon" id="sizing_dept_no_1" style="margin: 100px">所属部门</span>
-                            <input type="text" class="form-control hidden" placeholder="部门编号"
-                                   aria-describedby="sizing_dept_no_1" id="edit_dept_no">
-                            <input type="text" class="form-control" placeholder="部门名称"
-                                   aria-describedby="sizing_dept_name" disabled="disabled" id="edit_dept_name">
+                            <span class="input-group-addon" id="sizing_sys_no" style="margin: 100px">所属系统</span>
+                            <input type="text" class="form-control hidden" placeholder="系统编号"
+                                   aria-describedby="sizing_dept_no_1" id="edit_sys_no">
+                            <input type="text" class="form-control" placeholder="系统名称"
+                                   aria-describedby="sizing_dept_name" disabled="disabled" id="edit_sys_name">
 
                             <div class="input-group-addon">
-                                <button type="button" data-toggle="modal" data-target="#select_dept_no"
-                                        id="edit_get_dept_no">
+                                <button type="button" data-toggle="modal" data-target="#select_sys_no"
+                                        id="edit_get_sys_no">
                                     <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
                                 </button>
                             </div>
                         </div>
 
-
-                        <!--选择团队   -->
-                        <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
-                            <span class="input-group-addon" id="sizing_team_no_1" style="margin: 100px">所属团队</span>
-                            <input type="text" class="form-control hidden" placeholder="团队编号"
-                                   aria-describedby="sizing_team_no_1" disabled="disabled" id="edit_team_no">
-                            <input type="text" class="form-control" placeholder="团队名称" aria-describedby="sizing_team_no"
-                                   disabled="disabled" id="edit_team_name">
-
-
-                            <div class="input-group-addon" id="edit_get_team_info">
-                                <button type="button" data-toggle="modal" data-target="#select_team_no"
-                                        id="edit_get_team_no">
-                                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-
-
+                        <!--用户状态   -->
                         <div class="input-group">
                             <span class="input-group-addon" id="sizing-addon6">用户状态</span>
                             <select class="form-control" aria-describedby="sizing-addon6" id="edit_user_status"
@@ -232,7 +198,7 @@
                             </select>
                         </div>
 
-
+                        <!--手机号码   -->
                         <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
                             <span class="input-group-addon" id="sizing_phone_no_1" style="margin: 100px">手机号码</span>
                             <input type="text" class="form-control" placeholder="手机号码"
@@ -240,12 +206,12 @@
 
                         </div>
 
+                         <!--电子邮箱   -->
                         <div class="input-group" style="margin-top: 10px;margin-bottom: 10px">
                             <span class="input-group-addon" id="sizing_email_no_1" style="margin: 100px">电子邮箱</span>
                             <input type="text" class="form-control" placeholder="电子邮箱"
                                    aria-describedby="sizing_email_no_1" required id="edit_email_no">
                         </div>
-
 
                     </div>
 
@@ -287,6 +253,50 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>
+
+
+      <!--此莫泰对话框用来动态关联系统信息 -->
+       <div class="modal fade " id="select_sys_no" tabindex="-1" role="dialog"
+         aria-labelledby="selectDeptabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true" id="close_sys">
+                        ×
+                    </button>
+                    <h4 class="modal-title" id="selectDeptLabel">
+                        系统信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+
+
+
+                      <div class="input-group" style="margin-top: 10px;margin-bottom: 40px"  id="system">
+                            <span class="input-group-addon" id="sizing-sys">所属系统</span>
+                            <select class="form-control selectpicker" aria-describedby="sizing-addon"
+                                    multiple="multiple" title="请选择系统" id="sys_no_list_select"
+                                    style="width: 100%">
+
+                            </select>
+                        </div>
+
+
+
+                    <button type="button" class="btn btn-default" id="submit_user_select_sys"
+                            style="position: absolute;right: 1rem;bottom: 1rem">
+                        确认
+                    </button>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
 
 
     </div>
@@ -388,15 +398,24 @@
         bindQuery();
         bindCreateUser();
 
+        //删除用户
         bindDeleteUser();
         //删除确认框
-        bindConfirm()
+        bindDeleteUserConfirm();
 
+        //获取编辑用户数据
         bindGetEditUser();
-        bindEditUser();
+        //提交编辑用户数据
+       bindSubmitEditUser();
 
-       bindGetSys()
-
+      //添加时获取系统嘻信息
+      bindAddGetSysInfo();
+      //编辑时获取系统信息
+      bindEditGetSysInfo();
+      //提交选择的系统信息
+      bindSubmitSysInfo();
+     //取消编辑用户
+     bindCancelEditUser();
 
     });
 
@@ -515,7 +534,7 @@
 
 
     //删除用户确认框
-    function bindConfirm() {
+    function bindDeleteUserConfirm() {
         $("#confirm").on("click", function () {
             var confirm = $(this).attr("data-confirm")
             if (confirm == "confirm") {
@@ -574,15 +593,11 @@
                 success: function (result) {
                     $("#edit_user_id").val(result.user_info[0].user_no)
                     $("#edit_user_name").val(result.user_info[0].user_name)
-                    $("#edit_role_no").val(result.user_info[0].role_no)
-                    $("#edit_role_name").val(result.user_info[0].role_name)
-                    $("#edit_dept_no").val(result.user_info[0].dept_no)
-                    $("#edit_dept_name").val(result.user_info[0].dept_name)
-                    $("#edit_team_no").val(result.user_info[0].team_no)
-                    $("#edit_team_name").val(result.user_info[0].team_name)
+                    $("#edit_sys_name").val(result.user_info[0].sys_no)
                     $("#edit_user_status").val(result.user_info[0].status)
                     $("#edit_phone_no").val(result.user_info[0].mobile)
                     $("#edit_email_no").val(result.user_info[0].email)
+
                     }
                 });
         })
@@ -590,48 +605,31 @@
 
 
     // 提交编辑用户
-    function bindEditUser() {
+    function bindSubmitEditUser() {
         $("#confirm_edit_user").on("click", function () {
             var user_no = $("#edit_user_id").val()
             var user_name = $("#edit_user_name").val()
-            var role_no = $("#edit_role_no").val()
-            var role_name = $("#edit_role_name").val()
-            var dept_no = $("#edit_dept_no").val()
-            var dept_name = $("#edit_dept_name").val()
-            var team_no = $("#edit_team_no").val()
-            var team_name = $("#edit_team_name").val()
+            var sys_no = $("#edit_sys_no").val()
             var status = $("#edit_user_status").val()
             var mobile = $("#edit_phone_no").val()
             var email = $("#edit_email_no").val()
 
-            console.log('team_no:' + team_no)
-
             if (user_no == "") {
                 return toastr.error("用户编号不能为空")
-            }
+            };
             if (user_name == "") {
                 return toastr.error("用户姓名不能为空")
-            }
-            if (role_no == "") {
-                return toastr.error("用户角色不能为空")
-            }
-            if (dept_name == "") {
-                if (role_no != 's_admin' && role_no != 'admin') {
-                    return toastr.error("所属部门不能为空")
-                }
-            }
+            };
+           if (sys_no == "") {
+                return toastr.error("所属系统不能为空")
+            };
 
-            if (team_name == "") {
-                if (role_no != 's_admin' && role_no != 'admin' && role_no != 'C01') {
-                    return toastr.error("所属团队不能为空")
-                }
-            }
             if (status == "") {
                 return toastr.error("用户状态不能为空")
-            }
+            };
             if (email == "") {
                 return toastr.error("电子邮件不能为空")
-            }
+            };
 
             $.ajax({
                 url: "/editUser/",
@@ -640,12 +638,7 @@
                 data: {
                     user_no: user_no,
                     user_name: user_name,
-                    role_no: role_no,
-                    role_name: role_name,
-                    dept_no: dept_no,
-                    dept_name: dept_name,
-                    team_no: team_no,
-                    team_name: team_name,
+                    sys_no:sys_no,
                     status: status,
                     mobile: mobile,
                     email: email
@@ -673,9 +666,9 @@
 
 
     //*****************************************************************************
-    //获取已x系统的系统
-    function bindGetSys() {
 
+    //新增用户-获取已存在系统的信息
+    function bindAddGetSysInfo() {
         $("#create_user_btn").on("click", function () {
 
             $.ajax({
@@ -683,29 +676,30 @@
                 type: "post",
                 dataType: "json",
                 success: function (result) {
-                    console.log(result.sysList[0].sys_no)
+                    if(result.length > 0){
+                        var select = document.getElementById("sys_list");
+                        var option1 = document.createElement("option");
+                        option1.text = "请选择"
+                        option1.value = ""
+                        select.options.add(option1)
 
-                    if (result.code == "200") {
-
-
-                        var select = document.getElementById("sys_list")
-                        for (var i = 0; i < (result.sysList.length); i++) {
-
-                            var option = document.createElement("option");
-                            option.value = result.sysList[i].sys_no
-                            option.text = result.sysList[i].sys_name
-                            select.options.add(option)
-                        }
-                         //使用refresh方法更新UI以匹配新状态。
+                        for (var i = 0; i < (result.length); i++) {
+                            var option2 = document.createElement("option");
+                            option2.value = result[i].sys_no
+                            option2.text = result[i].sys_name + "(" + result[i].sys_no + ")"
+                            select.options.add(option2)
+                    }
+                       //使用refresh方法更新UI以匹配新状态。
                         $('#sys_list').selectpicker('refresh');
+
                         //render方法强制重新渲染引导程序 - 选择ui。
                         $('#sys_list').selectpicker('render');
+                    }else {
+                        return toastr.error("系统编号为空")
+                    };
 
-                    } else {
 
-                            return   toastr.success(result.msg)
-                    }
-                    ;
+
 
                 }
             });
@@ -715,7 +709,59 @@
     }
 
 
+    //编辑用户-获取已存在系统的信息
+    function bindEditGetSysInfo() {
+        $("#edit_get_sys_no").on("click", function () {
+           // $("#sys_no_list_select option").remove()
+            $.ajax({
+                url: "/querySys/",
+                type: "post",
+                dataType: "json",
+                success: function (result) {
 
+                    if (result.length >= 1) {
+                         console.log('eeee:',result)
+                        var select = document.getElementById("sys_no_list_select");
+                        var option1 = document.createElement("option");
+                        option1.text = "请选择"
+                        option1.value = ""
+                        select.options.add(option1)
+
+                        for (var i = 0; i < (result.length); i++) {
+                            var option2 = document.createElement("option");
+                            option2.value = result[i].sys_no
+                            option2.text = result[i].sys_name
+                            select.options.add(option2)
+                        }
+                      //使用refresh方法更新UI以匹配新状态。
+                        $('#sys_no_list_select').selectpicker('refresh');
+
+                        //render方法强制重新渲染引导程序 - 选择ui。
+                        $('#sys_no_list_select').selectpicker('render');
+                    }
+
+                }
+            })
+
+        })
+    }
+
+
+    //编辑用户-重新选择的系统信息
+    function bindSubmitSysInfo() {
+        $("#submit_user_select_sys").on("click", function () {
+
+            //将编辑所属系统中的选择系统编号赋值给编辑框汇总
+             var sysName = $("#sys_no_list_select").find("option:selected").text()
+              var sysNo = $("#sys_no_list_select").val()
+               $("#edit_sys_name").val(sysNo)
+               $("#edit_sys_no").val(sysNo)
+             $("#sys_no_list_select option").remove()
+               $("#close_sys").click()
+
+        })
+
+    }
 
 
     //取消新建用户
@@ -756,26 +802,15 @@
             // 编辑用户
             $("#edit_user_no").val("")
             $("#edit_user_name").val("")
-            $("#edit_role_no").val("")
-            $("#edit_role_name").val("")
-            $("#edit_dept_no").val("")
-            $("#edit_dept_name").val("")
-            $("#edit_team_no").val("")
-            $("#edit_team_name").val("")
-            $("#edit_userl_status").val("")
+            $("#edit_user_status").val("")
             $("#edit_phone_no").val("")
             $("#edit_email_no").val("")
+             $("#sys_no_list_select option").remove()
 
             // 新建用户
             $("#user_no").val("")
             $("#user_name").val("")
-            $("#role_no").val("")
-            $("#role_name").val("")
-            $("#dept_no").val("")
-            $("#dept_name").val("")
-            $("#team_no").val("")
-            $("#team_name").val("")
-            $("#userl_status").val("")
+            $("#user_status").val("")
             $("#phone_no").val("")
             $("#email_no").val("")
 
